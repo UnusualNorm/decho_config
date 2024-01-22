@@ -8,7 +8,7 @@ export async function getConfig(
   const config = await getRawConfig(platform, type, id);
   if (!config && platform !== "default") return getConfig("default", type, id);
   else if (!config) return undefined;
-  
+
   if (config.redirect) {
     const [newPlatform, newType, newId] = config.redirect;
     return getConfig(

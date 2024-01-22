@@ -21,6 +21,9 @@ export const handler: Handler[] = [
       return ctx.next();
     }
 
+    console.info(
+      `Accepted websocket connection from ${ctx.remoteAddr.hostname}`,
+    );
     const { socket, response } = Deno.upgradeWebSocket(req);
 
     const url = new URL(req.url);
@@ -102,9 +105,12 @@ export const handler: Handler[] = [
       const decoded = atob(hash);
       const [username, password] = decoded.split(":");
       if (username === "admin" && password === PASSWORD) {
+        console.info(ctx.remoteAddr.hostname, req.method, req.url);
         return ctx.next();
       }
     }
+
+    console.warn(`Unauthorized request from ${ctx.remoteAddr.hostname}`);
     return new Response("Unauthorized", {
       status: 401,
       headers: {
